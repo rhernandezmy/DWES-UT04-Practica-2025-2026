@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'tareas',
 ]
 
+AUTH_USER_MODEL = 'tareas.TipoUsuario'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
