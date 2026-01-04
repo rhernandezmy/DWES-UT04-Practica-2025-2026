@@ -36,12 +36,12 @@ En esta práctica deberas desarrollar una aplicación web para la gestión de ta
 En tareas/models.py, crear un modelo TareaBase con los siguientes campos:
       Campo	                Tipo	                            Descripción
 
-* [X] id	                UUIDField (primary key)             Identificador único
-* [X] titulo	            CharField	                        Nombre o título de la tarea
-* [X] descripcion	        TextField	                        Descripción detallada
-* [X] completada	        BooleanField (por defecto False)	Estado de la tarea
+* [X] id	                UUIDField (primary key)               Identificador único
+* [X] titulo	          CharField	                        Nombre o título de la tarea
+* [X] descripcion	          TextField	                        Descripción detallada
+* [X] completada	          BooleanField (por defecto False)	Estado de la tarea
 * [X] fecha_creacion	    DateTimeField (auto_now_add=True)	Fecha de creación
-* [X] fecha_entrega     	DateTimeField	                    Fecha de entrega
+* [X] fecha_entrega         DateTimeField	                        Fecha de entrega
 
 * [X] 💡Añade el método __str__() para mostrar el título de la tarea en el panel de administración.
 
@@ -50,7 +50,7 @@ En tareas/models.py, crear un modelo grupos de usuarios con los siguientes campo
       Campo	                Tipo	                            Descripción
 
 * [X] nombre                CharField                           Nombre o título del grupo
-* [X] miembros	            ManyToManyField	                    Miembros del grupo
+* [X] miembros	          ManyToManyField	                Miembros del grupo
 
 * [X] 💡Añade el método __str__() para devolver el nombre al imprimir usuario
     
@@ -59,24 +59,24 @@ En tareas/models.py, crear un modelo TareaGrupo con los siguientes campos:
       Campo	                Tipo	                            Descripción
 
 * [X] creador               ForeignKey                          Creador de la tarea del grupo
-* [X] grupo	                ForeignKey	                        Grupo asignado a la tarea
-* [X] necesita_evaluacion	BooleanField	                    Necesita evaluación por parte del profesor
+* [X] grupo	                ForeignKey	                      Grupo asignado a la tarea
+* [X] necesita_evaluacion   BooleanField	                      Necesita evaluación por parte del profesor
     
 ## 7. Modelo para tareas asignadas a usuarios individuales
 En tareas/models.py, crear un modelo TareaIndividual con los siguientes campos:
       Campo	                Tipo	                            Descripción
 
 * [X] creador               ForeignKey                          Creador de la tarea del grupo
-* [X] asignado_a            ForeignKey	                        Alumno asignado a la tarea
-* [X] necesita_evaluacion	BooleanField	                    Necesita evaluación por parte del profesor
+* [X] asignado_a            ForeignKey	                      Alumno asignado a la tarea
+* [X] necesita_evaluacio    BooleanField	                      Necesita evaluación por parte del profesor
     
 ## 8. Modelo para tareas evaluables
 En tareas/models.py, crear un modelo TareaEvaluable con los siguientes campos:
       Campo	                Tipo	                            Descripción
 
 * [X] creador               ForeignKey                          Creador de la tarea del grupo
-* [X] asignado_a            ForeignKey	                        Alumno asignado a la tarea
-* [X] profesor_validador 	ForeignKey	                        Profesor asignado como validador
-* [X] calificacion	        FloatField	                        Calificación obtenida
-* [X] comentarios	        TextField	                        Comentarios por parte del profesor
+* [X] asignado_a            ForeignKey	                      Alumno asignado a la tarea
+* [X] profesor_validador    ForeignKey	                      Profesor asignado como validador
+* [X] calificacion	    FloatField	                      Calificación obtenida
+* [X] comentarios	          TextField	                      Comentarios por parte del profesor
 
