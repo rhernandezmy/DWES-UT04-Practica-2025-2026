@@ -12,15 +12,15 @@
 En esta práctica deberas desarrollar una aplicación web para la gestión de tareas en un entorno educativo que permita a profesores crear y administrar diferentes tipos de tareas, y a alumnos visualizarlas y completarlas.
 
 * [X] El sistema distinguirá entre tres tipos de tareas: individuales, grupales y evaluables,
-* [X] Las tareas vendrán con diferentes fórmulas para completarse según el rol de usuario: alumno o profesor.
-* [X] Como alumno podré crear tareas de los distintos tipos existentes.
-* [X] Como alumno podré validar la finalización de una tarea, que no requiera evaluación del profesor.
-* [X] Como profesor podré validar la finalización de tareas que lo requieran.
+* [] Las tareas vendrán con diferentes fórmulas para completarse según el rol de usuario: alumno o profesor.
+* [] Como alumno podré crear tareas de los distintos tipos existentes.
+* [] Como alumno podré validar la finalización de una tarea, que no requiera evaluación del profesor.
+* [] Como profesor podré validar la finalización de tareas que lo requieran.
 
 ## 3. Listado de elementos a implementar
 * Vistas
 
-    * [] Vista en la que un alumno/profesor pueda ver sus datos.
+    * [X] Vista en la que un alumno/profesor pueda ver sus datos.
     * [] Vista con el listado de todo el alumnado/profesorado.
     * [] Vista en la que un alumno puede ver todas las tareas que ha creado o colabora.
     * [] Vista en la que un profesor puede ver todas las tareas que requieren su validación.
