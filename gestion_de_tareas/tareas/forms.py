@@ -34,7 +34,7 @@ class RegistroUsuarioForm(UserCreationForm):
 class TareaIndividualForm(forms.ModelForm):
     class Meta:
         model = TareaIndividual
-        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'necesita_revision']
+        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'necesita_evaluacion']
 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
@@ -46,7 +46,7 @@ class TareaIndividualForm(forms.ModelForm):
 class TareaGrupalForm(forms.ModelForm):
     class Meta:
         model = TareaGrupo
-        fields = ['titulo', 'descripcion', 'fecha_entrega', 'grupo', 'necesita_revision']
+        fields = ['titulo', 'descripcion', 'fecha_entrega', 'grupo', 'necesita_evaluacion']
 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
@@ -58,7 +58,7 @@ class TareaGrupalForm(forms.ModelForm):
 class TareaEvaluableForm(forms.ModelForm):
     class Meta:
         model = TareaEvaluable
-        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'necesita_revision', 'profesor_evaluador']
+        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'profesor_validador', 'calificacion','comentarios']
 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
