@@ -21,7 +21,7 @@ En esta práctica deberas desarrollar una aplicación web para la gestión de ta
 * Vistas
 
     * [X] Vista en la que un alumno/profesor pueda ver sus datos.
-    * [] Vista con el listado de todo el alumnado/profesorado.
+    * [X] Vista con el listado de todo el alumnado/profesorado.
     * [] Vista en la que un alumno puede ver todas las tareas que ha creado o colabora.
     * [] Vista en la que un profesor puede ver todas las tareas que requieren su validación.
 

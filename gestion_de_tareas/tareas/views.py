@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import TipoUsuario
-
+from .forms import RegistroUsuarioForm
 
 # Create your views here.
 
@@ -31,3 +31,19 @@ def listar_profesores(request):
 
     profesores = TipoUsuario.objects.filter(es_profesor=True)
     return render(request, 'tareas/listar_profesores.html', {'profesores': profesores}) # Renderizar la plantilla con el contexto de profesores
+
+# Vista para crear usuarios (solo para superusuarios)
+@login_required
+def crear_usuario(request):
+    usuario = request.user
+    if not usuario.is_superuser and not usuario.es_profesor:
+        return render(request, 'tareas/acceso_denegado.html')  # Página de acceso denegado para no superusuarios  
+
+    if request.method == 'POST':
+        form = RegistroUsuarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'tareas/usuario_creado.html')  # Página de confirmación de usuario creado
+    else:
+        form = RegistroUsuarioForm()
+    return render(request, 'tareas/crear_usuario.html', {'form': form})

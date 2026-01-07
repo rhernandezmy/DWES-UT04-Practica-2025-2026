@@ -14,7 +14,7 @@ class TipoUsuario(AbstractUser):
         # Si es superuser-> debe tener acceso total
         if self.is_superuser:
             self.es_profesor = True
-            self.es_alumno = True
+            self.es_alumno = False
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -29,7 +29,7 @@ class TareaBase(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_entrega = models.DateTimeField(blank=True, null=True)
     
-    class Meta:
+    class Meta: # Indica que es una clase abstracta
         abstract = True
 
     def __str__(self):
