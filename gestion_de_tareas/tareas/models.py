@@ -10,6 +10,13 @@ class TipoUsuario(AbstractUser):
     es_profesor = models.BooleanField(default=False)
     es_alumno = models.BooleanField(default=True)
     
+    def save (self, *args, **kwargs):
+        # Si es superuser-> debe tener acceso total
+        if self.is_superuser:
+            self.es_profesor = True
+            self.es_alumno = True
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return self.username
     
