@@ -1,0 +1,18 @@
+<!-- templates/tareas/tareas_a_validar.html -->
+<h1>Tareas a Validar</h1>
+
+{% if tareas_evaluables %}
+    <ul>
+    {% for tarea in tareas_evaluables %}
+        <li>
+            <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
+            Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
+            Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
+            Profesor Validador: {{ tarea.profesor_validador.username|default:"No asignado" }}
+        </li>
+        <hr>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay tareas pendientes de validación.</p>
+{% endif %}
