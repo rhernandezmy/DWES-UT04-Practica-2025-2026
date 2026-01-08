@@ -38,19 +38,19 @@ class TareaIndividualForm(forms.ModelForm):
 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
-        if fecha_entrega and fecha_entrega < timezone.now().date():
+        if fecha_entrega and fecha_entrega <= timezone.now():
             raise forms.ValidationError("La fecha de entrega debe ser futura")
         return fecha_entrega
 
 # Formulario para crear tarea grupal
-class TareaGrupalForm(forms.ModelForm):
+class TareaGrupoForm(forms.ModelForm):
     class Meta:
         model = TareaGrupo
         fields = ['titulo', 'descripcion', 'fecha_entrega', 'grupo', 'necesita_evaluacion']
 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
-        if fecha_entrega and fecha_entrega < timezone.now().date():
+        if fecha_entrega and fecha_entrega <= timezone.now():
             raise forms.ValidationError("La fecha de entrega debe ser futura")
         return fecha_entrega
     
@@ -62,6 +62,6 @@ class TareaEvaluableForm(forms.ModelForm):
 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
-        if fecha_entrega and fecha_entrega < timezone.now().date():
+        if fecha_entrega and fecha_entrega <= timezone.now():
             raise forms.ValidationError("La fecha de entrega debe ser futura")
         return fecha_entrega
