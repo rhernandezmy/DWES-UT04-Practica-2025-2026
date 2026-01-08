@@ -77,3 +77,26 @@ def mis_tareas(request):
     }
     return render(request, 'tareas/mis_tareas.html', contexto)
     
+# Vista para que los profesores vean las tareas que necesitan su validación y superusuarios vean todas las tareas evaluables
+@login_required
+def tareas_a_validar(request):
+    usuario = request.user
+    
+    if usuario.is_superuser:
+        # Superusuario ve todas las tareas que necesitan validación
+        tareas_evaluables = TareaEvaluable.objects.filter(necesita_evaluacion=True)
+    
+    elif usuario.es_profesor:
+        # Profesores ven solo las tareas que les han sido asignadas para validar
+        tareas_evaluables = TareaEvaluable.objects.filter(profesor_validador=usuario, necesita_evaluacion=True)
+    
+    else:
+        return render(request, 'tareas/acceso_denegado.html')  # Página de acceso denegado
+    
+    # Ordenar las tareas por fecha de entrega ascendente
+    tareas_evaluables = tareas_evaluables.order_by('fecha_entrega')
+    
+    contexto = {
+        'tareas_evaluables': tareas_evaluables,
+    }
+    return render(request, 'tareas/tareas_por_validar.html', contexto)
