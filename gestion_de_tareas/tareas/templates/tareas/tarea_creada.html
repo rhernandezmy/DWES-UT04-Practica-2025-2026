@@ -1,0 +1,31 @@
+<!-- templates/tareas/tarea_creada.html -->
+<h1>Tarea Creada con Éxito</h1>
+
+<p><strong>Título:</strong> {{ tarea.titulo }}</p>
+<p><strong>Descripción:</strong> {{ tarea.descripcion|default:"Sin descripción" }}</p>
+<p><strong>Fecha de entrega:</strong> {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}</p>
+
+{% if tarea.asignado_a %}
+    <p><strong>Asignada a:</strong> {{ tarea.asignado_a.username }}</p>
+{% endif %}
+
+{% if tarea.grupo %}
+    <p><strong>Asignada al grupo:</strong> {{ tarea.grupo.nombre }}</p>
+{% endif %}
+
+{% if tarea.profesor_validador %}
+    <p><strong>Profesor Validador:</strong> {{ tarea.profesor_validador.username }}</p>
+{% endif %}
+
+{% if tarea.calificacion %}
+    <p><strong>Calificación:</strong> {{ tarea.calificacion }}</p>
+{% endif %}
+
+{% if tarea.comentarios %}
+    <p><strong>Comentarios:</strong> {{ tarea.comentarios }}</p>
+{% endif %}
+
+<p><a href="{% url 'mis_tareas' %}">Volver a Mis Tareas</a></p>
+<p><a href="{% url 'crear_tarea' tipo='individual' %}">Crear otra tarea individual</a></p>
+<p><a href="{% url 'crear_tarea' tipo='grupal' %}">Crear otra tarea grupal</a></p>
+<p><a href="{% url 'crear_tarea' tipo='evaluable' %}">Crear otra tarea evaluable</a></p>

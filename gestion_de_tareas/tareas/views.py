@@ -101,32 +101,48 @@ def tareas_a_validar(request):
     }
     return render(request, 'tareas/tareas_a_validar.html', contexto)
 
+# Vista para crear tareas (para profesores y alumnos)
 @login_required
 def crear_tarea(request, tipo):
     usuario = request.user
-    if not usuario.es_profesor:
+
+    # Solo alumnos o profesores pueden crear tareas
+    if not (usuario.es_profesor or usuario.es_alumno):
         return render(request, 'tareas/acceso_denegado.html')
 
-    # Seleccionar el formulario según el tipo
-    if tipo == 'individual':
+    # Elegir formulario según tipo de tarea
+    if tipo == "individual":
         FormClass = TareaIndividualForm
-    elif tipo == 'grupal':
+    elif tipo == "grupal":
         FormClass = TareaGrupoForm
-    elif tipo == 'evaluable':
+    elif tipo == "evaluable":
         FormClass = TareaEvaluableForm
     else:
         return render(request, 'tareas/acceso_denegado.html')  # Tipo no válido
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = FormClass(request.POST)
         if form.is_valid():
             tarea = form.save(commit=False)
-            # Si hay un campo creador, lo asignamos
-            if hasattr(tarea, 'creador'):
-                tarea.creador = usuario
+            tarea.creador = usuario  # Siempre asignamos el creador
+
+            # Si es alumno y la tarea es evaluable, no puede asignar profesor_validador
+            if usuario.es_alumno and tipo == "evaluable":
+                tarea.profesor_validador = None
+
             tarea.save()
             return render(request, 'tareas/tarea_creada.html', {'tarea': tarea})
     else:
         form = FormClass()
+        # Para alumnos deshabilitamos el campo profesor_validador si existe
+        if usuario.es_alumno and tipo == "evaluable":
+            if 'profesor_validador' in form.fields:
+                form.fields['profesor_validador'].disabled = True
+                form.fields['profesor_validador'].required = False
 
-    return render(request, 'tareas/crear_tarea.html', {'form': form, 'tipo': tipo})
+    contexto = {
+        'form': form,
+        'tipo': tipo,
+        'usuario': usuario,
+    }
+    return render(request, 'tareas/crear_tarea.html', contexto)

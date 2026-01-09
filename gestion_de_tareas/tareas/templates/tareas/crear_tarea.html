@@ -1,17 +1,50 @@
 <!-- templates/tareas/crear_tarea.html -->
 <h1>Crear Tarea {% if tipo %}{{ tipo|capfirst }}{% endif %}</h1>
 
+<!-- Mensaje según rol -->
+{% if usuario.es_alumno %}
+    <p>Estás creando una tarea como <strong>alumno</strong>.</p>
+    {% if tipo == "evaluable" %}
+        <small>Nota: No puedes asignar un profesor validador. Esta tarea se marcará como pendiente automáticamente sin evaluación.</small>
+    {% endif %}
+{% elif usuario.es_profesor %}
+    <p>Estás creando una tarea como <strong>profesor</strong>. Puedes asignar cualquier campo.</p>
+{% endif %}
+
 {% if form.errors %}
     <p style="color: red;">Por favor, corrige los errores del formulario:</p>
 {% endif %}
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    {% for field in form %}
+        {% comment %}
+        Si es alumno y el campo es profesor_validador, lo mostramos deshabilitado
+        {% endcomment %}
+        {% if usuario.es_alumno and field.name == "profesor_validador" %}
+            <p>
+                {{ field.label_tag }}
+                <input type="text" value="No asignable" disabled>
+            </p>
+        {% else %}
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <span style="color:red;">{{ error }}</span>
+                {% endfor %}
+            </p>
+        {% endif %}
+    {% endfor %}
+
     <button type="submit">Crear Tarea</button>
 </form>
 
-<!-- Mensaje de ayuda sobre qué tipo de tarea se está creando -->
+<!-- Mensaje explicativo según tipo -->
 {% if tipo %}
     <p>
         {% if tipo == "individual" %}
@@ -23,3 +56,6 @@
         {% endif %}
     </p>
 {% endif %}
+
+<p><a href="{% url 'mis_tareas' %}">Volver a mis tareas</a></p>
+
