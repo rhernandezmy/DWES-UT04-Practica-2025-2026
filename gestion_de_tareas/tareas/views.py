@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import TareaEvaluable, TareaGrupo, TareaIndividual, TipoUsuario
 from .forms import RegistroUsuarioForm
 from django.db.models import Q
+from .forms import TareaIndividualForm, TareaGrupoForm, TareaEvaluableForm
 
 # Create your views here.
 
@@ -100,4 +101,32 @@ def tareas_a_validar(request):
     }
     return render(request, 'tareas/tareas_a_validar.html', contexto)
 
-#
+@login_required
+def crear_tarea(request, tipo):
+    usuario = request.user
+    if not usuario.es_profesor:
+        return render(request, 'tareas/acceso_denegado.html')
+
+    # Seleccionar el formulario según el tipo
+    if tipo == 'individual':
+        FormClass = TareaIndividualForm
+    elif tipo == 'grupal':
+        FormClass = TareaGrupoForm
+    elif tipo == 'evaluable':
+        FormClass = TareaEvaluableForm
+    else:
+        return render(request, 'tareas/acceso_denegado.html')  # Tipo no válido
+
+    if request.method == 'POST':
+        form = FormClass(request.POST)
+        if form.is_valid():
+            tarea = form.save(commit=False)
+            # Si hay un campo creador, lo asignamos
+            if hasattr(tarea, 'creador'):
+                tarea.creador = usuario
+            tarea.save()
+            return render(request, 'tareas/tarea_creada.html', {'tarea': tarea})
+    else:
+        form = FormClass()
+
+    return render(request, 'tareas/crear_tarea.html', {'form': form, 'tipo': tipo})
