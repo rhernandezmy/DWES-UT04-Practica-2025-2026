@@ -1,0 +1,25 @@
+<!-- templates/tareas/crear_tarea.html -->
+<h1>Crear Tarea {% if tipo %}{{ tipo|capfirst }}{% endif %}</h1>
+
+{% if form.errors %}
+    <p style="color: red;">Por favor, corrige los errores del formulario:</p>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Crear Tarea</button>
+</form>
+
+<!-- Mensaje de ayuda sobre qué tipo de tarea se está creando -->
+{% if tipo %}
+    <p>
+        {% if tipo == "individual" %}
+            Esta tarea será asignada a un alumno específico.
+        {% elif tipo == "grupal" %}
+            Esta tarea será asignada a un grupo de alumnos.
+        {% elif tipo == "evaluable" %}
+            Esta tarea requiere evaluación por parte de un profesor.
+        {% endif %}
+    </p>
+{% endif %}
