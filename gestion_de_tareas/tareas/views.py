@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import TareaEvaluable, TareaGrupo, TareaIndividual, TipoUsuario
 from .forms import RegistroUsuarioForm
+from django.db.models import Q
 
 # Create your views here.
 
@@ -44,27 +45,28 @@ def crear_usuario(request):
         form = RegistroUsuarioForm()
     return render(request, 'tareas/crear_usuario.html', {'form': form})
 
-# Vista para los alumnos que muestra sus tareas asignadas y para superusuarios les permite ver todas las tareas
+# Vista para que muestre a los alumnos sus tareas asignadas y las creadas por ellos
+# Vista para que los superusuarios les permita ver todas las tareas
 @login_required
 def mis_tareas(request):
     usuario = request.user
 
     if usuario.is_superuser:
         # Superusuario ve todas las tareas
-        tareas_individuales = TareaIndividual.objects.all()
-        tareas_grupales = TareaGrupo.objects.all()
-        tareas_evaluables = TareaEvaluable.objects.all()
-    
+        tareas_individuales = TareaIndividual.objects.all().order_by('fecha_entrega')
+        tareas_grupales = TareaGrupo.objects.all().order_by('fecha_entrega')
+        tareas_evaluables = TareaEvaluable.objects.all().order_by('fecha_entrega')
+
     elif usuario.es_alumno:       # Alumnos normales solo ven sus tareas
         # Tareas individuales
-        tareas_individuales = TareaIndividual.objects.filter(asignado_a=usuario)
+        tareas_individuales = TareaIndividual.objects.filter(Q(asignado_a=usuario) | Q(creador=usuario)).order_by('fecha_entrega')
     
         # Tareas grupales (a través de los grupos del usuario)
         grupos_usuario = usuario.grupos.all()
-        tareas_grupales = TareaGrupo.objects.filter(grupo__in=grupos_usuario)
+        tareas_grupales = TareaGrupo.objects.filter(Q(grupo__in=grupos_usuario) | Q(creador=usuario)).distinct().order_by('fecha_entrega')
 
         # Tareas evaluables
-        tareas_evaluables = TareaEvaluable.objects.filter(asignado_a=usuario)
+        tareas_evaluables = TareaEvaluable.objects.filter(Q(asignado_a=usuario) | Q(creador=usuario)).order_by('fecha_entrega')
         
     else:
         # Otros tipos de usuarios no tienen acceso a esta vista
@@ -100,3 +102,5 @@ def tareas_a_validar(request):
         'tareas_evaluables': tareas_evaluables,
     }
     return render(request, 'tareas/tareas_a_validar.html', contexto)
+
+#
