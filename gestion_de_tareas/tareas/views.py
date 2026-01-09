@@ -86,17 +86,14 @@ def tareas_a_validar(request):
     
     if usuario.is_superuser:
         # Superusuario ve todas las tareas que necesitan validación
-        tareas_evaluables = TareaEvaluable.objects.all()
+        tareas_evaluables = TareaEvaluable.objects.all().order_by('fecha_entrega')
     
     elif usuario.es_profesor:
         # Profesores ven solo las tareas que les han sido asignadas para validar
-        tareas_evaluables = TareaEvaluable.objects.filter(profesor_validador=usuario)
+        tareas_evaluables = TareaEvaluable.objects.filter(profesor_validador=usuario).order_by('fecha_entrega')
     
     else:
         return render(request, 'tareas/acceso_denegado.html')  # Página de acceso denegado
-    
-    # Ordenar las tareas por fecha de entrega ascendente
-    tareas_evaluables = tareas_evaluables.order_by('fecha_entrega')
     
     contexto = {
         'tareas_evaluables': tareas_evaluables,

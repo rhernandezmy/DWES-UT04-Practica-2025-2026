@@ -1,6 +1,7 @@
 <!-- templates/tareas/mis_tareas.html -->
 <h1>Mis Tareas</h1>
 
+<!-- Tareas individuales -->
 {% if tareas_individuales %}
     <h2>Tareas Individuales</h2>
     <ul>
@@ -8,15 +9,20 @@
         <li>
             <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
-            Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}
+            Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
+            Creador: {{ tarea.creador.username }}<br>
+            {% if tarea.asignado_a %}
+                Asignada a: {{ tarea.asignado_a.username }}
+            {% endif %}
         </li>
         <hr>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No tienes tareas individuales asignadas.</p>
+    <p>No tienes tareas individuales asignadas o creadas.</p>
 {% endif %}
 
+<!-- Tareas grupales -->
 {% if tareas_grupales %}
     <h2>Tareas Grupales</h2>
     <ul>
@@ -24,15 +30,18 @@
         <li>
             <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
-            Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}
+            Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
+            Creador: {{ tarea.creador.username }}<br>
+            Grupo: {{ tarea.grupo.nombre }}
         </li>
         <hr>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No tienes tareas grupales asignadas.</p>
+    <p>No tienes tareas grupales asignadas o creadas.</p>
 {% endif %}
 
+<!-- Tareas evaluables -->
 {% if tareas_evaluables %}
     <h2>Tareas Evaluables</h2>
     <ul>
@@ -41,12 +50,14 @@
             <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
             Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
-            Profesor Validador: {{ tarea.profesor_validador.username|default:"No asignado" }}
+            Creador: {{ tarea.creador.username }}<br>
+            Alumno asignado: {{ tarea.asignado_a.username|default:"No asignado" }}<br>
+            Profesor validador: {{ tarea.profesor_validador.username|default:"No asignado" }}
         </li>
         <hr>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No tienes tareas evaluables asignadas.</p>
+    <p>No tienes tareas evaluables asignadas o creadas.</p>
 {% endif %}
 
