@@ -1,7 +1,7 @@
 <!-- templates/tareas/mis_tareas.html -->
 <h1>Mis Tareas</h1>
 
-{% comment %} Tareas individuales {% endcomment %}
+<!--Tareas individuales-->
 {% if tareas_individuales %}
     <h2>Tareas Individuales</h2>
     <ul>
@@ -29,7 +29,8 @@
     <p>No tienes tareas individuales asignadas o creadas.</p>
 {% endif %}
 
-{% comment %} Tareas grupales {% endcomment %}
+
+<!--Tareas grupales-->
 {% if tareas_grupales %}
     <h2>Tareas Grupales</h2>
     <ul>
@@ -57,7 +58,8 @@
     <p>No tienes tareas grupales asignadas o creadas.</p>
 {% endif %}
 
-{% comment %} Tareas evaluables {% endcomment %}
+
+<!--Tareas evaluables-->
 {% if tareas_evaluables %}
     <h2>Tareas Evaluables</h2>
     <ul>
