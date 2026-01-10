@@ -35,15 +35,15 @@ class RegistroUsuarioForm(UserCreationForm):
 class TareaIndividualForm(forms.ModelForm):
     class Meta:
         model = TareaIndividual
-        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a']
+        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'necesita_evaluacion']
         widgets = {
             'fecha_entrega': DateTimeInput(attrs={'type': 'datetime-local','placeholder': 'YYYY-MM-DD HH:MM'}),
         }
 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
-        if fecha_entrega and fecha_entrega <= timezone.now():
-            raise forms.ValidationError("La fecha de entrega debe ser futura")
+        if fecha_entrega <= timezone.now():
+            raise forms.ValidationError("La fecha de entrega debe ser posterior a hoy.")
         return fecha_entrega
 
 # Formulario para crear tarea grupal
@@ -57,23 +57,23 @@ class TareaGrupoForm(forms.ModelForm):
         
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
-        if fecha_entrega and fecha_entrega <= timezone.now():
-            raise forms.ValidationError("La fecha de entrega debe ser futura")
+        if fecha_entrega <= timezone.now():
+            raise forms.ValidationError("La fecha de entrega debe ser posterior a hoy.")
         return fecha_entrega
     
 # Formulario para crear tarea evaluable
 class TareaEvaluableForm(forms.ModelForm):
     class Meta:
         model = TareaEvaluable
-        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'profesor_validador','comentarios']
+        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'profesor_validador']
         widgets = {
             'fecha_entrega': DateTimeInput(attrs={'type': 'datetime-local','placeholder': 'YYYY-MM-DD HH:MM'}),
         }
                 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
-        if fecha_entrega and fecha_entrega <= timezone.now():
-            raise forms.ValidationError("La fecha de entrega debe ser futura")
+        if fecha_entrega <= timezone.now():
+            raise forms.ValidationError("La fecha de entrega debe ser posterior a hoy.")
         return fecha_entrega
     
 # Formulario para completar tarea (común a los tres tipos)
