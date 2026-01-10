@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -13,6 +14,9 @@ urlpatterns = [
     path('completar_tarea/<str:tipo>/<uuid:tarea_id>/', views.completar_tarea, name='completar_tarea'),
     path('validar_tarea/<uuid:tarea_id>/', views.validar_tarea, name='validar_tarea'),
 
-    # urls para las comprobaciones
+    # url para las comprobaciones
     path('checklist_avanzado/', views.checklist_avanzado, name='checklist_avanzado'),
+    
+     # url para hacer logout
+    path('accounts/logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 ]

@@ -1,19 +1,33 @@
+<!-- templates/tareas/dashboard.html-->
 <h1>Bienvenido, {{ usuario.username }}!</h1>
 
 <ul>
     <li><a href="{% url 'mis_tareas' %}">Mis Tareas</a></li>
-    <li><a href="{% url 'checklist_avanzado' %}">Checklist Avanzada</a></li>
 
-    {% if usuario.es_profesor %}
+    {% if usuario.es_alumno %}
         <li><a href="{% url 'crear_tarea' 'individual' %}">Crear Tarea Individual</a></li>
         <li><a href="{% url 'crear_tarea' 'grupal' %}">Crear Tarea Grupal</a></li>
         <li><a href="{% url 'crear_tarea' 'evaluable' %}">Crear Tarea Evaluable</a></li>
+    {% endif %}
+
+    {% if usuario.es_profesor %}
         <li><a href="{% url 'tareas_a_validar' %}">Tareas a Validar</a></li>
+        <li><a href="{% url 'crear_tarea' 'individual' %}">Crear Tarea Individual</a></li>
+        <li><a href="{% url 'crear_tarea' 'grupal' %}">Crear Tarea Grupal</a></li>
+        <li><a href="{% url 'crear_tarea' 'evaluable' %}">Crear Tarea Evaluable</a></li>
+        <li><a href="{% url 'listar_alumnos' %}">Listar Alumnos</a></li>
+        <li><a href="{% url 'listar_profesores' %}">Listar Profesores</a></li>
     {% endif %}
 
     {% if usuario.is_superuser %}
         <li><a href="{% url 'crear_usuario' %}">Crear Usuario</a></li>
-        <li><a href="{% url 'listar_alumnos' %}">Listar Alumnos</a></li>
-        <li><a href="{% url 'listar_profesores' %}">Listar Profesores</a></li>
     {% endif %}
+
+    <li>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Cerrar Sesión</button>
+        </form>
+    </li>
 </ul>
+
