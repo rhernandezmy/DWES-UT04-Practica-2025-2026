@@ -14,7 +14,12 @@
             Asignada a: {{ tarea.asignado_a.username }}<br>
 
             {% if not tarea.completada %}
-                {% if usuario.es_profesor or (usuario.es_alumno and not tarea.necesita_evaluacion) %}
+                {% if usuario.es_profesor %}
+                    <form method="post" action="{% url 'completar_tarea' 'individual' tarea.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Marcar como completada</button>
+                    </form>
+                {% elif usuario.es_alumno and not tarea.necesita_evaluacion %}
                     <form method="post" action="{% url 'completar_tarea' 'individual' tarea.id %}">
                         {% csrf_token %}
                         <button type="submit">Marcar como completada</button>
@@ -43,7 +48,12 @@
             Grupo: {{ tarea.grupo.nombre }}<br>
 
             {% if not tarea.completada %}
-                {% if usuario.es_profesor or (usuario.es_alumno and not tarea.necesita_evaluacion) %}
+                {% if usuario.es_profesor %}
+                    <form method="post" action="{% url 'completar_tarea' 'grupal' tarea.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Marcar como completada</button>
+                    </form>
+                {% elif usuario.es_alumno and not tarea.necesita_evaluacion %}
                     <form method="post" action="{% url 'completar_tarea' 'grupal' tarea.id %}">
                         {% csrf_token %}
                         <button type="submit">Marcar como completada</button>
