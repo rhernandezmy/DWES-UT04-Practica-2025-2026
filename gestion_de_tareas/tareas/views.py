@@ -4,6 +4,7 @@ from .models import TareaEvaluable, TareaGrupo, TareaIndividual, TipoUsuario
 from .forms import RegistroUsuarioForm
 from django.db.models import Q
 from .forms import TareaIndividualForm, TareaGrupoForm, TareaEvaluableForm
+from django.shortcuts import get_object_or_404, redirect
 
 # Create your views here.
 
@@ -146,3 +147,42 @@ def crear_tarea(request, tipo):
         'usuario': usuario,
     }
     return render(request, 'tareas/crear_tarea.html', contexto)
+
+# Vista para completar tareas (alumnos y profesores)
+@login_required
+def completar_tarea(request, tipo, tarea_id):
+    usuario = request.user
+
+    # Resolver la tarea según tipo
+    if tipo == 'individual':
+        tarea = get_object_or_404(TareaIndividual, id=tarea_id)
+
+        # Permisos
+        if usuario.es_alumno and tarea.asignado_a != usuario:
+            return render(request, 'tareas/acceso_denegado.html')
+
+    elif tipo == 'grupal':
+        tarea = get_object_or_404(TareaGrupo, id=tarea_id)
+
+        if usuario.es_alumno and usuario not in tarea.grupo.miembros.all():
+            return render(request, 'tareas/acceso_denegado.html')
+
+    elif tipo == 'evaluable':
+        tarea = get_object_or_404(TareaEvaluable, id=tarea_id)
+
+        # Solo profesor o superuser
+        if not (usuario.es_profesor or usuario.is_superuser):
+            return render(request, 'tareas/acceso_denegado.html')
+
+    else:
+        return render(request, 'tareas/acceso_denegado.html')
+
+    # 🔒 Restricción clave
+    if usuario.es_alumno and getattr(tarea, 'necesita_evaluacion', False):
+        return render(request, 'tareas/acceso_denegado.html')
+
+    # Marcar como completada
+    tarea.completada = True
+    tarea.save()
+
+    return redirect('mis_tareas')

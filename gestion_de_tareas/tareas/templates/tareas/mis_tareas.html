@@ -7,12 +7,20 @@
     <ul>
     {% for tarea in tareas_individuales %}
         <li>
-            <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
+            <strong>{{ tarea.titulo }}</strong><br>
+            {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
             Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
             Creador: {{ tarea.creador.username }}<br>
-            {% if tarea.asignado_a %}
-                Asignada a: {{ tarea.asignado_a.username }}
+            Asignada a: {{ tarea.asignado_a.username }}
+
+            {% if not tarea.completada %}
+                {% if user.es_profesor or (user.es_alumno and not tarea.necesita_evaluacion) %}
+                    <form method="post" action="{% url 'completar_tarea' 'individual' tarea.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Marcar como completada</button>
+                    </form>
+                {% endif %}
             {% endif %}
         </li>
         <hr>
@@ -28,11 +36,21 @@
     <ul>
     {% for tarea in tareas_grupales %}
         <li>
-            <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
+            <strong>{{ tarea.titulo }}</strong><br>
+            {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
             Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
             Creador: {{ tarea.creador.username }}<br>
             Grupo: {{ tarea.grupo.nombre }}
+
+            {% if not tarea.completada %}
+                {% if user.es_profesor or (user.es_alumno and not tarea.necesita_evaluacion) %}
+                    <form method="post" action="{% url 'completar_tarea' 'grupal' tarea.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Marcar como completada</button>
+                    </form>
+                {% endif %}
+            {% endif %}
         </li>
         <hr>
     {% endfor %}
@@ -47,12 +65,19 @@
     <ul>
     {% for tarea in tareas_evaluables %}
         <li>
-            <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
+            <strong>{{ tarea.titulo }}</strong><br>
+            {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
             Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
-            Creador: {{ tarea.creador.username }}<br>
-            Alumno asignado: {{ tarea.asignado_a.username|default:"No asignado" }}<br>
+            Alumno: {{ tarea.asignado_a.username }}<br>
             Profesor validador: {{ tarea.profesor_validador.username|default:"No asignado" }}
+
+            {% if not tarea.completada and user.es_profesor %}
+                <form method="post" action="{% url 'completar_tarea' 'evaluable' tarea.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Validar tarea</button>
+                </form>
+            {% endif %}
         </li>
         <hr>
     {% endfor %}

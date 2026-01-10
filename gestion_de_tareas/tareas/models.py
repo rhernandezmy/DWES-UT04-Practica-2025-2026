@@ -28,6 +28,7 @@ class TareaBase(models.Model):
     completada = models.BooleanField(default=False)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_entrega = models.DateTimeField(blank=True, null=True)
+    fecha_completada = models.DateTimeField(blank=True, null=True)
     
     class Meta: # Indica que es una clase abstracta
         abstract = True
