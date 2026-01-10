@@ -1,35 +1,40 @@
 # DWES-UT04-Practica-2025-2026
 
 ## 1.  Objetivo principal:
-* [] Creación de una aplicación para la gestión de tareas de una clase.
-* [] Objetivos secundarios
-* [] Modelar datos complejos con relaciones avanzadas en Django ORM
-* [] Manejar formularios avanzados con validaciones customizadas
-* [] Configurar y optimizar PostgreSQL en Django
+* [X] Creación de una aplicación para la gestión de tareas de una clase.
+* [X] Objetivos secundarios
+* [X] Modelar datos complejos con relaciones avanzadas en Django ORM
+* [X] Manejar formularios avanzados con validaciones customizadas
+* [X] Configurar y optimizar PostgreSQL en Django
 * [X] Aplicar migraciones con datos iniciales
 
 ## 2. Enunciado de la práctica
 En esta práctica deberas desarrollar una aplicación web para la gestión de tareas en un entorno educativo que permita a profesores crear y administrar diferentes tipos de tareas, y a alumnos visualizarlas y completarlas.
 
 * [X] El sistema distinguirá entre tres tipos de tareas: individuales, grupales y evaluables,
-* [] Las tareas vendrán con diferentes fórmulas para completarse según el rol de usuario: alumno o profesor.
-* [] Como alumno podré crear tareas de los distintos tipos existentes.
-* [] Como alumno podré validar la finalización de una tarea, que no requiera evaluación del profesor.
-* [] Como profesor podré validar la finalización de tareas que lo requieran.
+* [X] Las tareas vendrán con diferentes fórmulas para completarse según el rol de usuario: alumno o profesor.
+* [X] Como alumno podré crear tareas de los distintos tipos existentes.
+* [X] Como alumno podré validar la finalización de una tarea, que no requiera evaluación del profesor.
+* [X] Como profesor podré validar la finalización de tareas que lo requieran.
 
 ## 3. Listado de elementos a implementar
 * Vistas
 
     * [X] Vista en la que un alumno/profesor pueda ver sus datos.
     * [X] Vista con el listado de todo el alumnado/profesorado.
-    * [] Vista en la que un alumno puede ver todas las tareas que ha creado o colabora.
-    * [] Vista en la que un profesor puede ver todas las tareas que requieren su validación.
+    * [X] Vista para crear usuarios (profesores y superusuarios)
+    * [X] Vista en la que un alumno puede ver todas las tareas que ha creado o colabora.
+    * [X] Vista en la que un profesor puede ver todas las tareas que requieren su validación.
+    * [X] Vista para crear tareas (para profesores y alumnos)
+    * [X] Vista para completar tareas (alumnos y profesores)
+    * [X] Vista para el dashboard
 
 * Formularios
 
-    * [] Formulario para el alta del alumnado/profesorado.
-    * [] Formulario de creación de una tarea individual (puede necesitar o no evaluación de un profesor)
-    * [] Formulario de creación de una tarea grupal (puede necesitar o no evaluación de un profesor)
+    * [X] Formulario para el alta del alumnado/profesorado.
+    * [X] Formulario de creación de una tarea individual (puede necesitar o no evaluación de un profesor)
+    * [X] Formulario de creación de una tarea grupal (puede necesitar o no evaluación de un profesor)
+    * [X] Formulario para crear tarea evaluable
 
 ## 4. Modelo TareaBase(M)
 
@@ -42,6 +47,7 @@ En tareas/models.py, crear un modelo TareaBase con los siguientes campos:
 * [X] completada	          BooleanField (por defecto False)	Estado de la tarea
 * [X] fecha_creacion	    DateTimeField (auto_now_add=True)	Fecha de creación
 * [X] fecha_entrega         DateTimeField	                        Fecha de entrega
+* [X] fecha_completada      DateTimeField	                        Fecha de completada
 
 * [X] 💡Añade el método __str__() para mostrar el título de la tarea en el panel de administración.
 
@@ -68,7 +74,7 @@ En tareas/models.py, crear un modelo TareaIndividual con los siguientes campos:
 
 * [X] creador               ForeignKey                          Creador de la tarea del grupo
 * [X] asignado_a            ForeignKey	                      Alumno asignado a la tarea
-* [X] necesita_evaluacio    BooleanField	                      Necesita evaluación por parte del profesor
+* [X] necesita_evaluacion   BooleanField	                      Necesita evaluación por parte del profesor
     
 ## 8. Modelo para tareas evaluables
 En tareas/models.py, crear un modelo TareaEvaluable con los siguientes campos:
