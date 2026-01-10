@@ -11,6 +11,8 @@
             Alumno asignado: {{ tarea.asignado_a.username|default:"No asignado" }}<br>
             Profesor validador: {{ tarea.profesor_validador.username|default:"No asignado" }}<br>
             Creador: {{ tarea.creador.username }}
+            <br>
+            <a href="{% url 'validar_tarea' tarea.id %}">Validar</a>
         </li>
         <hr>
     {% endfor %}

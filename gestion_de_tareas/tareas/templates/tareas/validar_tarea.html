@@ -1,0 +1,18 @@
+<!-- templates/tareas/validar_tarea.html-->
+<h1>Validar tarea: {{ tarea.titulo }}</h1>
+<li>
+    <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
+    Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
+    Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
+    Alumno asignado: {{ tarea.asignado_a.username|default:"No asignado" }}<br>
+    Profesor validador: {{ tarea.profesor_validador.username|default:"No asignado" }}<br>
+    Creador: {{ tarea.creador.username }}
+    <br>
+</li>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Validar tarea</button>
+</form>
+
+<p><a href="{% url 'tareas_a_validar' %}">Volver</a></p>

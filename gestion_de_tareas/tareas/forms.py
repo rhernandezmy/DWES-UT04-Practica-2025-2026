@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import TareaEvaluable, TareaGrupo, TareaIndividual, TipoUsuario, Grupo
 from django.utils import timezone
+from django.forms import DateTimeInput
 
 # Formulario de registro de usuario
 
@@ -35,6 +36,9 @@ class TareaIndividualForm(forms.ModelForm):
     class Meta:
         model = TareaIndividual
         fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a']
+        widgets = {
+            'fecha_entrega': DateTimeInput(attrs={'type': 'datetime-local','placeholder': 'YYYY-MM-DD HH:MM'}),
+        }
 
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
@@ -47,7 +51,10 @@ class TareaGrupoForm(forms.ModelForm):
     class Meta:
         model = TareaGrupo
         fields = ['titulo', 'descripcion', 'fecha_entrega', 'grupo']
-
+        widgets = {
+            'fecha_entrega': DateTimeInput(attrs={'type': 'datetime-local','placeholder': 'YYYY-MM-DD HH:MM'}),
+        }
+        
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
         if fecha_entrega and fecha_entrega <= timezone.now():
@@ -58,10 +65,19 @@ class TareaGrupoForm(forms.ModelForm):
 class TareaEvaluableForm(forms.ModelForm):
     class Meta:
         model = TareaEvaluable
-        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'profesor_validador', 'calificacion','comentarios']
-
+        fields = ['titulo', 'descripcion', 'fecha_entrega', 'asignado_a', 'profesor_validador','comentarios']
+        widgets = {
+            'fecha_entrega': DateTimeInput(attrs={'type': 'datetime-local','placeholder': 'YYYY-MM-DD HH:MM'}),
+        }
+                
     def clean_fecha_entrega(self):
         fecha_entrega = self.cleaned_data.get('fecha_entrega')
         if fecha_entrega and fecha_entrega <= timezone.now():
             raise forms.ValidationError("La fecha de entrega debe ser futura")
         return fecha_entrega
+    
+# Formulario para completar tarea (común a los tres tipos)
+class ValidarTareaForm(forms.ModelForm):
+    class Meta:
+        model = TareaEvaluable
+        fields = ['calificacion', 'comentarios']

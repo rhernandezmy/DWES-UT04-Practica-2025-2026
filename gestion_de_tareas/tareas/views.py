@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import TareaEvaluable, TareaGrupo, TareaIndividual, TipoUsuario
-from .forms import RegistroUsuarioForm
 from django.db.models import Q
-from .forms import TareaIndividualForm, TareaGrupoForm, TareaEvaluableForm
+from .forms import RegistroUsuarioForm, TareaIndividualForm, TareaGrupoForm, TareaEvaluableForm, ValidarTareaForm
 from django.shortcuts import get_object_or_404, redirect
 
 # Create your views here.
@@ -73,6 +72,12 @@ def mis_tareas(request):
         # Tareas evaluables
         tareas_evaluables = TareaEvaluable.objects.filter(Q(asignado_a=usuario) | Q(creador=usuario)).order_by('fecha_entrega')
         
+    elif usuario.es_profesor:
+        tareas_individuales = TareaIndividual.objects.filter(creador=usuario).order_by('fecha_entrega')
+        tareas_grupales = TareaGrupo.objects.filter(creador=usuario).order_by('fecha_entrega')
+        tareas_evaluables = TareaEvaluable.objects.filter(creador=usuario).order_by('fecha_entrega')
+
+    
     else:
         # Otros tipos de usuarios no tienen acceso a esta vista
         return render(request, 'tareas/acceso_denegado.html')  # Página de acceso denegado
@@ -91,15 +96,18 @@ def tareas_a_validar(request):
     usuario = request.user
     
     if usuario.is_superuser:
-        # Superusuario ve todas las tareas que necesitan validación
-        tareas_evaluables = TareaEvaluable.objects.all().order_by('fecha_entrega')
+        # Superusuario ve todas las tareas evaluables no completadas
+        tareas_evaluables = TareaEvaluable.objects.filter(completada=False).order_by('fecha_entrega')
     
     elif usuario.es_profesor:
-        # Profesores ven solo las tareas que les han sido asignadas para validar
-        tareas_evaluables = TareaEvaluable.objects.filter(profesor_validador=usuario).order_by('fecha_entrega')
+        # Profesores ven solo las tareas asignadas a ellos y que no estén completadas
+        tareas_evaluables = TareaEvaluable.objects.filter(
+            profesor_validador=usuario,
+            completada=False
+        ).order_by('fecha_entrega')
     
     else:
-        return render(request, 'tareas/acceso_denegado.html')  # Página de acceso denegado
+        return render(request, 'tareas/acceso_denegado.html')
     
     contexto = {
         'tareas_evaluables': tareas_evaluables,
@@ -142,9 +150,7 @@ def crear_tarea(request, tipo):
         form = FormClass()
         # Para alumnos deshabilitamos el campo profesor_validador si existe
         if usuario.es_alumno and tipo == "evaluable":
-            if 'profesor_validador' in form.fields:
-                form.fields['profesor_validador'].disabled = True
-                form.fields['profesor_validador'].required = False
+            form.fields.get('profesor_validador') and setattr(form.fields['profesor_validador'], 'disabled', True)
 
     contexto = {
         'form': form,
@@ -262,3 +268,29 @@ def checklist_avanzado(request):
     }
 
     return render(request, 'tareas/checklist_avanzado.html', contexto)
+
+# Vista para validar tarea evaluable
+@login_required
+def validar_tarea(request, tarea_id):
+    usuario = request.user
+    tarea = get_object_or_404(TareaEvaluable, id=tarea_id)
+
+    # Solo el profesor asignado o superusuario puede validar
+    if not (usuario.es_profesor and tarea.profesor_validador == usuario) and not usuario.is_superuser:
+        return render(request, 'tareas/acceso_denegado.html')
+
+    if request.method == 'POST':
+        form = ValidarTareaForm(request.POST, instance=tarea)
+        if form.is_valid():
+            tarea = form.save(commit=False)
+            tarea.completada = True
+            form.save()
+            return redirect('tareas_a_validar')
+    else:
+        form = ValidarTareaForm(instance=tarea)
+
+    contexto = {
+        'form': form,
+        'tarea': tarea,
+    }
+    return render(request, 'tareas/validar_tarea.html', contexto)

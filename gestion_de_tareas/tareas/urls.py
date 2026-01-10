@@ -11,6 +11,8 @@ urlpatterns = [
     path('crear_usuario/', views.crear_usuario, name='crear_usuario'),
     path('crear_tarea/<str:tipo>/', views.crear_tarea, name='crear_tarea'),
     path('completar_tarea/<str:tipo>/<uuid:tarea_id>/', views.completar_tarea, name='completar_tarea'),
+    path('validar_tarea/<uuid:tarea_id>/', views.validar_tarea, name='validar_tarea'),
+
     # urls para las comprobaciones
     path('checklist_avanzado/', views.checklist_avanzado, name='checklist_avanzado'),
 ]
