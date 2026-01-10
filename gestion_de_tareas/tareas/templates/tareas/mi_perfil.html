@@ -10,3 +10,5 @@
 <p><strong>Es superusuario:</strong> {{ usuario.is_superuser | yesno:"Sí,No" }}</p>
 <p><strong>Fecha de registro:</strong> {{ usuario.date_joined }}</p>
 <p><strong>Último inicio de sesión:</strong> {{ usuario.last_login }}</p>
+
+<a href="{% url 'dashboard' %}">Volver al dashboard</a>

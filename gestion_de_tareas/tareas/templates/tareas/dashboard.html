@@ -1,0 +1,18 @@
+<h1>Bienvenido, {{ usuario.username }}!</h1>
+
+<ul>
+    <li><a href="{% url 'mis_tareas' %}">Mis Tareas</a></li>
+
+    {% if usuario.es_profesor %}
+        <li><a href="{% url 'crear_tarea' 'individual' %}">Crear Tarea Individual</a></li>
+        <li><a href="{% url 'crear_tarea' 'grupal' %}">Crear Tarea Grupal</a></li>
+        <li><a href="{% url 'crear_tarea' 'evaluable' %}">Crear Tarea Evaluable</a></li>
+        <li><a href="{% url 'tareas_a_validar' %}">Tareas a Validar</a></li>
+    {% endif %}
+
+    {% if usuario.is_superuser %}
+        <li><a href="{% url 'crear_usuario' %}">Crear Usuario</a></li>
+        <li><a href="{% url 'listar_alumnos' %}">Listar Alumnos</a></li>
+        <li><a href="{% url 'listar_profesores' %}">Listar Profesores</a></li>
+    {% endif %}
+</ul>

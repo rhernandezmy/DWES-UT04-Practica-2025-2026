@@ -194,3 +194,13 @@ def completar_tarea(request, tipo, tarea_id):
     tarea.save()
 
     return redirect('mis_tareas')
+
+
+# Vista para el dashboard
+@login_required
+def dashboard(request):
+    usuario = request.user
+    contexto = {
+        'usuario': usuario
+    }
+    return render(request, 'tareas/dashboard.html', contexto)
