@@ -14,6 +14,7 @@ def mi_perfil(request):
     usuario = request.user # Obtener el usuario autenticado
     return render(request, 'tareas/mi_perfil.html', {'usuario': usuario}) # Renderizar la plantilla con el contexto del usuario
 
+
 # Vista para ver listado de alumnos (solo para profesores y superusuarios)
 @login_required
 def listar_alumnos(request):
@@ -24,6 +25,7 @@ def listar_alumnos(request):
 
     alumnos = TipoUsuario.objects.filter(es_alumno=True)
     return render(request, 'tareas/listar_alumnos.html', {'alumnos': alumnos}) # Renderizar la plantilla con el contexto de alumnos
+
 
 # Vista para ver listado de profesores
 @login_required
@@ -46,6 +48,7 @@ def crear_usuario(request):
     else:
         form = RegistroUsuarioForm()
     return render(request, 'tareas/crear_usuario.html', {'form': form})
+
 
 # Vista para que muestre a los alumnos sus tareas asignadas y las creadas por ellos
 # Vista para que los superusuarios les permita ver todas las tareas
@@ -80,7 +83,8 @@ def mis_tareas(request):
         'tareas_evaluables': tareas_evaluables,
     }
     return render(request, 'tareas/mis_tareas.html', contexto)
-    
+  
+  
 # Vista para que los profesores vean las tareas que necesitan su validación y superusuarios vean todas las tareas evaluables
 @login_required
 def tareas_a_validar(request):
@@ -101,6 +105,7 @@ def tareas_a_validar(request):
         'tareas_evaluables': tareas_evaluables,
     }
     return render(request, 'tareas/tareas_a_validar.html', contexto)
+
 
 # Vista para crear tareas (para profesores y alumnos)
 @login_required
@@ -148,23 +153,26 @@ def crear_tarea(request, tipo):
     }
     return render(request, 'tareas/crear_tarea.html', contexto)
 
+
 # Vista para completar tareas (alumnos y profesores)
 @login_required
 def completar_tarea(request, tipo, tarea_id):
     usuario = request.user
 
-    # Resolver la tarea según tipo
     if tipo == 'individual':
         tarea = get_object_or_404(TareaIndividual, id=tarea_id)
 
-        # Permisos
-        if usuario.es_alumno and tarea.asignado_a != usuario:
+        if usuario.es_alumno and not (
+            tarea.asignado_a == usuario or tarea.creador == usuario
+        ):
             return render(request, 'tareas/acceso_denegado.html')
 
     elif tipo == 'grupal':
         tarea = get_object_or_404(TareaGrupo, id=tarea_id)
 
-        if usuario.es_alumno and usuario not in tarea.grupo.miembros.all():
+        if usuario.es_alumno and not (
+            usuario in tarea.grupo.miembros.all() or tarea.creador == usuario
+        ):
             return render(request, 'tareas/acceso_denegado.html')
 
     elif tipo == 'evaluable':
@@ -177,7 +185,7 @@ def completar_tarea(request, tipo, tarea_id):
     else:
         return render(request, 'tareas/acceso_denegado.html')
 
-    # 🔒 Restricción clave
+    # 🔒 Restricción clave del enunciado
     if usuario.es_alumno and getattr(tarea, 'necesita_evaluacion', False):
         return render(request, 'tareas/acceso_denegado.html')
 

@@ -9,5 +9,5 @@ urlpatterns = [
     path('tareas_a_validar/', views.tareas_a_validar, name='tareas_a_validar'),  # vista para profesores
     path('crear_usuario/', views.crear_usuario, name='crear_usuario'),
     path('crear_tarea/<str:tipo>/', views.crear_tarea, name='crear_tarea'),
-
+    path('completar_tarea/<int:tarea_id>/', views.completar_tarea, name='completar_tarea'),
 ]

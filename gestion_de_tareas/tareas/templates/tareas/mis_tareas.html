@@ -1,21 +1,20 @@
 <!-- templates/tareas/mis_tareas.html -->
 <h1>Mis Tareas</h1>
 
-<!-- Tareas individuales -->
+{% comment %} Tareas individuales {% endcomment %}
 {% if tareas_individuales %}
     <h2>Tareas Individuales</h2>
     <ul>
     {% for tarea in tareas_individuales %}
         <li>
-            <strong>{{ tarea.titulo }}</strong><br>
-            {{ tarea.descripcion|default:"Sin descripción" }}<br>
+            <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
             Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
             Creador: {{ tarea.creador.username }}<br>
-            Asignada a: {{ tarea.asignado_a.username }}
+            Asignada a: {{ tarea.asignado_a.username }}<br>
 
             {% if not tarea.completada %}
-                {% if user.es_profesor or (user.es_alumno and not tarea.necesita_evaluacion) %}
+                {% if usuario.es_profesor or (usuario.es_alumno and not tarea.necesita_evaluacion) %}
                     <form method="post" action="{% url 'completar_tarea' 'individual' tarea.id %}">
                         {% csrf_token %}
                         <button type="submit">Marcar como completada</button>
@@ -30,21 +29,20 @@
     <p>No tienes tareas individuales asignadas o creadas.</p>
 {% endif %}
 
-<!-- Tareas grupales -->
+{% comment %} Tareas grupales {% endcomment %}
 {% if tareas_grupales %}
     <h2>Tareas Grupales</h2>
     <ul>
     {% for tarea in tareas_grupales %}
         <li>
-            <strong>{{ tarea.titulo }}</strong><br>
-            {{ tarea.descripcion|default:"Sin descripción" }}<br>
+            <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
             Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
             Creador: {{ tarea.creador.username }}<br>
-            Grupo: {{ tarea.grupo.nombre }}
+            Grupo: {{ tarea.grupo.nombre }}<br>
 
             {% if not tarea.completada %}
-                {% if user.es_profesor or (user.es_alumno and not tarea.necesita_evaluacion) %}
+                {% if usuario.es_profesor or (usuario.es_alumno and not tarea.necesita_evaluacion) %}
                     <form method="post" action="{% url 'completar_tarea' 'grupal' tarea.id %}">
                         {% csrf_token %}
                         <button type="submit">Marcar como completada</button>
@@ -59,24 +57,26 @@
     <p>No tienes tareas grupales asignadas o creadas.</p>
 {% endif %}
 
-<!-- Tareas evaluables -->
+{% comment %} Tareas evaluables {% endcomment %}
 {% if tareas_evaluables %}
     <h2>Tareas Evaluables</h2>
     <ul>
     {% for tarea in tareas_evaluables %}
         <li>
-            <strong>{{ tarea.titulo }}</strong><br>
-            {{ tarea.descripcion|default:"Sin descripción" }}<br>
+            <strong>{{ tarea.titulo }}</strong> - {{ tarea.descripcion|default:"Sin descripción" }}<br>
             Fecha de entrega: {{ tarea.fecha_entrega|date:"d/m/Y H:i" }}<br>
             Estado: {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}<br>
-            Alumno: {{ tarea.asignado_a.username }}<br>
-            Profesor validador: {{ tarea.profesor_validador.username|default:"No asignado" }}
+            Creador: {{ tarea.creador.username }}<br>
+            Alumno asignado: {{ tarea.asignado_a.username|default:"No asignado" }}<br>
+            Profesor validador: {{ tarea.profesor_validador.username|default:"No asignado" }}<br>
 
-            {% if not tarea.completada and user.es_profesor %}
-                <form method="post" action="{% url 'completar_tarea' 'evaluable' tarea.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Validar tarea</button>
-                </form>
+            {% if not tarea.completada %}
+                {% if usuario.es_profesor or usuario.is_superuser %}
+                    <form method="post" action="{% url 'completar_tarea' 'evaluable' tarea.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Marcar como completada</button>
+                    </form>
+                {% endif %}
             {% endif %}
         </li>
         <hr>
@@ -85,4 +85,5 @@
 {% else %}
     <p>No tienes tareas evaluables asignadas o creadas.</p>
 {% endif %}
+
 
