@@ -204,3 +204,61 @@ def dashboard(request):
         'usuario': usuario
     }
     return render(request, 'tareas/dashboard.html', contexto)
+
+
+#Vista para la checklist avanzada
+@login_required
+def checklist_avanzado(request):
+    usuario = request.user
+
+    # ✅ Usuarios
+    alumnos = TipoUsuario.objects.filter(es_alumno=True)
+    profesores = TipoUsuario.objects.filter(es_profesor=True)
+    superusuarios = TipoUsuario.objects.filter(is_superuser=True)
+
+    # ✅ Tareas
+    tareas_ind = TareaIndividual.objects.all()
+    tareas_grup = TareaGrupo.objects.all()
+    tareas_eval = TareaEvaluable.objects.all()
+
+    # ✅ Permisos críticos
+    permisos = {
+        'alumno_no_evalable': False,
+        'alumno_evalable': False,
+        'profesor_todas': False,
+        'superusuario_todas': False,
+    }
+
+    # Alumnos solo pueden completar tareas no evaluables
+    tarea_ind_no_eval = tareas_ind.filter(necesita_evaluacion=False).first()
+    tarea_grup_no_eval = tareas_grup.filter(necesita_evaluacion=False).first()
+    tarea_eval = tareas_eval.first()
+
+    if alumno := alumnos.first():
+        permisos['alumno_no_evalable'] = True if tarea_ind_no_eval or tarea_grup_no_eval else False
+        permisos['alumno_evalable'] = False  # Alumnos no pueden completar evaluables
+
+    # Profesores pueden completar cualquier tarea
+    if profesores.exists():
+        permisos['profesor_todas'] = True
+
+    # Superusuario puede completar todo
+    if superusuarios.exists():
+        permisos['superusuario_todas'] = True
+
+    contexto = {
+        'usuario': usuario,
+        'usuarios': {
+            'alumnos': alumnos.exists(),
+            'profesores': profesores.exists(),
+            'superusuarios': superusuarios.exists(),
+        },
+        'tareas': {
+            'individuales': tareas_ind.exists(),
+            'grupales': tareas_grup.exists(),
+            'evaluables': tareas_eval.exists(),
+        },
+        'permisos': permisos,
+    }
+
+    return render(request, 'tareas/checklist_avanzado.html', contexto)

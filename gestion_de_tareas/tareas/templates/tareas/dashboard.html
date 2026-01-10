@@ -2,6 +2,7 @@
 
 <ul>
     <li><a href="{% url 'mis_tareas' %}">Mis Tareas</a></li>
+    <li><a href="{% url 'checklist_avanzado' %}">Checklist Avanzada</a></li>
 
     {% if usuario.es_profesor %}
         <li><a href="{% url 'crear_tarea' 'individual' %}">Crear Tarea Individual</a></li>

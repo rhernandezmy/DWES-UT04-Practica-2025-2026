@@ -40,7 +40,12 @@ INSTALLED_APPS = [
     'tareas',
 ]
 
+# User model personalizado
 AUTH_USER_MODEL = 'tareas.TipoUsuario'
+
+# Redirecciones tras login / logout
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

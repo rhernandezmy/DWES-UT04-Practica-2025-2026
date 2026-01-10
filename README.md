@@ -86,3 +86,12 @@ En tareas/models.py, crear un modelo TareaEvaluable con los siguientes campos:
 * [X] calificacion	    FloatField	                      Calificación obtenida
 * [X] comentarios	          TextField	                      Comentarios por parte del profesor
 
+## 8. Usuarios creados para las pruebas
+ROL           Nombre    Contraseña
+Superusuario: admin     admin123
+
+Profesor:     profesor1 profesor123
+
+Alumnos:      alumno1   alumno1123
+              alumno2   alumno2123
+              alumno3   alumno3123

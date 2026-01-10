@@ -1,0 +1,33 @@
+<h1>Checklist Avanzado de Pruebas</h1>
+
+<h2>Usuarios</h2>
+<ul>
+    <li><input type="checkbox" {% if usuarios.alumnos %}checked{% endif %}> Al menos un alumno creado</li>
+    <li><input type="checkbox" {% if usuarios.profesores %}checked{% endif %}> Al menos un profesor creado</li>
+    <li><input type="checkbox" {% if usuarios.superusuarios %}checked{% endif %}> Al menos un superusuario creado</li>
+</ul>
+
+<h2>Tareas</h2>
+<ul>
+    <li><input type="checkbox" {% if tareas.individuales %}checked{% endif %}> Al menos una tarea individual creada</li>
+    <li><input type="checkbox" {% if tareas.grupales %}checked{% endif %}> Al menos una tarea grupal creada</li>
+    <li><input type="checkbox" {% if tareas.evaluables %}checked{% endif %}> Al menos una tarea evaluable creada</li>
+</ul>
+
+<h2>Permisos críticos</h2>
+<ul>
+    <li><input type="checkbox" {% if permisos.alumno_no_evalable %}checked{% endif %}>
+        Alumno puede completar tareas no evaluables
+    </li>
+    <li><input type="checkbox" {% if not permisos.alumno_evalable %}checked{% endif %}>
+        Alumno no puede completar tareas evaluables
+    </li>
+    <li><input type="checkbox" {% if permisos.profesor_todas %}checked{% endif %}>
+        Profesor puede completar cualquier tarea
+    </li>
+    <li><input type="checkbox" {% if permisos.superusuario_todas %}checked{% endif %}>
+        Superusuario puede completar cualquier tarea
+    </li>
+</ul>
+
+<p><a href="{% url 'dashboard' %}">🏠 Volver al Dashboard</a></p>
