@@ -89,6 +89,7 @@ En tareas/models.py, crear un modelo TareaEvaluable con los siguientes campos:
 ## 8. Usuarios creados para las pruebas
 ROL           Nombre    Contraseña
 Superusuario: admin     admin123
+              isard     pirineus
 
 Profesor:     profesor1 profesor123
 
